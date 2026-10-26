@@ -1,0 +1,17 @@
+{
+  "name": "Drow Patrol Guard",
+  "kind": "mortal",
+  "summary": "Generic Velkynvelve patrol guard (Out of the Abyss).",
+  "attributes": {"strength": 11, "dexterity": 14, "stamina": 12, "charisma": 10, "wits": 12},
+  "abilities": {"melee": 2, "dodge": 2, "stealth": 2, "intimidation": 1},
+  "attack": {"name": "shortsword", "attribute": "dexterity", "skill": "melee", "damage_rating": 2},
+  "soak": 0,
+  "generation": 0,
+  "humanity": 5,
+  "morale": 70,
+  "persona": {
+    "voice": "clipped Undercommon commands",
+    "wants": "to deliver prisoners alive to the priestess",
+    "fears": "Ilvara's disappointment more than death"
+  }
+}

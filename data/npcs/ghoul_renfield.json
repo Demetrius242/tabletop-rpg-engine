@@ -1,0 +1,11 @@
+{
+  "name": "Renfield",
+  "kind": "ghoul",
+  "summary": "A twitchy, blood-bound servant -- fast, loyal, and expendable.",
+  "attributes": {"strength": 3, "dexterity": 3, "stamina": 3, "wits": 2},
+  "abilities": {"brawl": 2, "melee": 2, "intimidation": 1},
+  "disciplines": {"Potence": 1},
+  "attack": {"name": "a length of pipe", "attribute": "dexterity", "skill": "melee", "damage_rating": 3},
+  "soak": 3, "generation": 0, "humanity": 6, "intelligence": 2,
+  "persona": {"voice": "servile and jittery", "fears": "his domitor's displeasure"}
+}

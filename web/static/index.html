@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-textsize="m">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hearth &amp; Hollow — RPG</title>
+<link rel="stylesheet" href="style.css" />
+<!--addon-styles-->
+</head>
+<body data-theme="dark">
+
+<section id="lobby" class="lobby">
+  <header class="lobby-head">
+    <h1>Hearth &amp; Hollow</h1>
+    <p class="tag">Choose a ruleset and world, then load a save or create a party.</p>
+    <p id="connState" class="conn">connecting…</p>
+  </header>
+
+  <div class="rules-bar slim">
+    <div class="rules-col">
+      <h3>Rules in play</h3>
+      <ul id="lobbyRules" class="rules mini"></ul>
+    </div>
+    <div class="rules-col optional-col">
+      <h3>Optional rules</h3>
+      <div id="lobbyOptional" class="opts mini"></div>
+    </div>
+  </div>
+
+  <div class="panels">
+    <div class="panel" id="panel-rulesets"><h2>Ruleset</h2><div class="list grouped" id="list-rulesets"></div></div>
+    <div class="panel" id="panel-settings"><h2>World</h2><div class="list" id="list-settings"></div></div>
+    <div class="panel" id="panel-stories"><h2>Story</h2><div class="list grouped" id="list-stories"></div></div>
+    <div class="panel panel-detail" id="panel-detail"><h2>Details</h2><div class="story-detail" id="storyDetail"></div></div>
+  </div>
+
+  <details id="lobbyConn" class="conn-lobby">
+    <summary>Model connection: <span id="lobbyBackend" class="backend-label">…</span></summary>
+    <div id="lobbyConnBody" class="conn-body"></div>
+  </details>
+
+  <div class="lobby-foot">
+    <div id="lobby-summary" class="summary"></div>
+    <div class="foot-actions">
+      <select id="loadSelect" class="load-select" disabled><option>No saves yet</option></select>
+      <button id="loadBtn" class="ghost" disabled>Load save</button>
+      <button id="createBtn" class="primary">Create a party</button>
+      <button id="beginPregenBtn" class="ghost" title="Start this story with its ready-made party">Quick start</button>
+    </div>
+  </div>
+</section>
+
+<div id="creator" class="overlay hidden">
+  <div class="creator-box">
+    <div class="creator-head">
+      <h2 id="creatorTitle">Create your party</h2>
+      <button id="creatorClose" class="iconbtn">✕</button>
+    </div>
+    <div class="creator-tabs" id="creatorTabs"></div>
+    <div id="charForms"></div>
+    <div class="creator-foot">
+      <div id="creatorMsg" class="msg"></div>
+      <button id="startPartyBtn" class="primary">Begin adventure</button>
+    </div>
+  </div>
+</div>
+
+<div id="detail" class="overlay hidden">
+  <div class="detail-box">
+    <button id="detailClose" class="iconbtn detail-x">✕</button>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<section id="game" class="game hidden">
+  <nav id="rail" class="rail">
+    <button class="rail-toggle" id="railToggle" title="Hide / show tabs">‹</button>
+    <button class="tab active" data-tab="play"><span class="ic">❖</span><span class="lb">Play</span></button>
+    <button class="tab" data-tab="character"><span class="ic">𖠁</span><span class="lb">Character</span></button>
+    <button class="tab" data-tab="equipment"><span class="ic">🛡</span><span class="lb">Equipment</span></button>
+    <button class="tab" data-tab="levelup"><span class="ic">⇧</span><span class="lb">Level Up</span><span class="tab-badge hidden" id="luBadge"></span></button>
+    <button class="tab hidden" id="tab-journal" data-tab="journal"><span class="ic">✎</span><span class="lb">Journal</span></button>
+    <button class="tab hidden" id="tab-spellbook" data-tab="spellbook"><span class="ic">✶</span><span class="lb">Spellbook</span></button>
+    <button class="tab" data-tab="saves"><span class="ic">❑</span><span class="lb">Save / Load</span></button>
+    <button class="tab" data-tab="info"><span class="ic">ⓘ</span><span class="lb">Info</span></button>
+    <button class="tab" data-tab="settings"><span class="ic">⚙</span><span class="lb">Settings</span></button>
+    <button class="tab" data-tab="llm"><span class="ic">⌬</span><span class="lb">LLM</span></button>
+    <div class="rail-spacer"></div>
+    <button class="tab quit" id="toLobby"><span class="ic">⟲</span><span class="lb">Lobby</span></button>
+  </nav>
+
+  <div class="view active" id="view-play">
+
+    <div id="tradePanel" class="trade-panel hidden">
+      <div class="trade-head">
+        <div class="trade-title">Trading with <b id="traderName">—</b></div>
+        <div class="trade-meta"><span id="traderGold" class="gold-badge">0 gp</span>
+          <span id="traderDiscount" class="disc-badge hidden"></span>
+          <button id="closeTrade" class="iconbtn">✕</button></div>
+      </div>
+      <div class="trade-cols">
+        <div class="trade-col" id="playerCol">
+          <div class="trade-col-head">Your goods <input class="trade-search" id="searchPlayer" placeholder="search…"></div>
+          <div class="trade-list" id="playerList"></div>
+        </div>
+        <div class="trade-mid">
+          <div class="deal-tray" id="dealTray">
+            <div class="deal-side"><div class="deal-lbl">Giving →</div><div class="deal-items" id="giveItems"></div></div>
+            <div class="deal-side"><div class="deal-lbl">← Taking</div><div class="deal-items" id="takeItems"></div></div>
+          </div>
+          <div class="deal-net" id="dealNet">Drag items to build a deal</div>
+          <div class="deal-actions"><button id="confirmDeal" class="primary" disabled>Confirm deal</button>
+            <button id="clearDeal" class="ghost">Clear</button></div>
+          <div class="trade-hint">Tip: type <i>haggle</i> or <i>flirt</i> in chat to bargain.</div>
+        </div>
+        <div class="trade-col" id="traderCol">
+          <div class="trade-col-head">Merchant <input class="trade-search" id="searchTrader" placeholder="search…"></div>
+          <div class="trade-list" id="traderList"></div>
+        </div>
+      </div>
+    </div>
+    <div class="image-area" id="imageArea">
+      <div class="image-ph"><div class="image-sigil" id="sceneSigil">❖</div><div class="image-cap" id="sceneCap">A scene awaits</div></div>
+    </div>
+    <div class="vsplit" id="splitImage" title="Drag to resize"></div>
+    <div class="chat-wrap" id="chatWrap"><div class="pane-label">Story</div><div class="chat" id="chat"></div></div>
+    <div class="vsplit" id="splitChat" title="Drag to resize"></div>
+    <div class="log-wrap" id="logWrap"><div class="pane-label">Log <span class="hint">dice · numbers · loot</span></div><div class="log" id="log"></div></div>
+    <div class="input-bar">
+      <div id="menuBar" class="menu-bar hidden"></div>
+      <input id="cmd" type="text" autocomplete="off" placeholder="Say or do something…  (try: look around · search · attack a cultist)" />
+      <button id="tradeBtn" class="ghost" title="Open a shop with a nearby merchant">🛍</button>
+      <button id="sendBtn" class="primary">Send</button>
+    </div>
+  </div>
+
+  <div class="view" id="view-character">
+    <aside class="portraits" id="portraits"></aside>
+    <div class="sheet-scroll"><div class="sheet" id="sheet"></div></div>
+  </div>
+
+  <div class="view" id="view-equipment">
+    <aside class="portraits" id="equipPortraits"></aside>
+    <div class="sheet-scroll"><div class="equip-screen" id="equipScreen"></div></div>
+  </div>
+
+  <div class="view" id="view-levelup">
+    <div class="lu2-wrap">
+      <aside class="lu-party" id="luParty"></aside>
+      <div class="lu2-canvas" id="luCanvas">
+        <div class="lu2-graph" id="luGraph"></div>
+        <div class="lu2-fab" id="luFab"></div>
+      </div>
+    </div>
+
+    <div id="luModal" class="overlay hidden">
+      <div class="lu-modal-box">
+        <div class="lu-modal-head">
+          <h2 id="luModalTitle">Advancement</h2>
+          <button id="luModalClose" class="iconbtn">✕</button>
+        </div>
+        <div class="lu-modal-body" id="luModalBody"></div>
+        <div class="lu-modal-foot" id="luModalFoot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-journal">
+    <div class="sheet-scroll"><div class="journal" id="journalBody"></div></div>
+  </div>
+
+  <div class="view" id="view-spellbook">
+    <aside class="portraits" id="casterList"></aside>
+    <div class="sheet-scroll"><div class="spellbook" id="spellbook"></div></div>
+  </div>
+
+  <div class="view" id="view-saves">
+    <div class="card">
+      <h2>Save</h2>
+      <p class="muted">Saved as two files — <code>pc.json</code> and <code>world.json</code> — per slot.</p>
+      <div class="row"><input id="saveSlot" type="text" placeholder="slot name (e.g. barrow-run)" /><button id="saveBtn" class="primary">Save game</button></div>
+      <div id="saveMsg" class="msg"></div>
+    </div>
+    <div class="card"><h2>Load</h2><div id="savesList" class="saves-list"></div></div>
+  </div>
+
+  <div class="view" id="view-info">
+    <div class="card"><h2>Versions</h2><div id="versionsBox" class="kv"></div></div>
+    <div class="card"><h2>Rules in play</h2><ul id="rulesList" class="rules"></ul></div>
+    <div class="card"><h2>Optional rules</h2><div id="optList" class="opts"></div></div>
+    <div class="card"><h2>This configuration</h2><div id="statsBox" class="stats"></div></div>
+  </div>
+
+  <div class="view" id="view-settings">
+    <div class="card">
+      <h2>Display</h2>
+      <label class="opt"><span>Theme</span>
+        <select id="optTheme">
+          <option value="dark">Candlelit dark</option>
+          <option value="violet">Dark violet</option>
+          <option value="forest">Deep forest</option>
+          <option value="crimson">Crimson night</option>
+          <option value="parchment">Parchment</option>
+        </select>
+      </label>
+      <label class="opt"><span>Text size</span>
+        <select id="optText"><option value="s">Small</option><option value="m" selected>Medium</option><option value="l">Large</option></select>
+      </label>
+      <label class="opt"><span>Auto-scroll story &amp; log</span><input type="checkbox" id="optAutoscroll" checked /></label>
+    </div>
+    <div class="card"><h2>About</h2><p class="muted">A local, LLM-narrated tabletop engine. Python is the single source of truth; the model only narrates and picks from closed sets.</p></div>
+  </div>
+
+  <div class="view" id="view-llm">
+    <div class="sheet-scroll"><div class="llm-screen" id="llmScreen"></div></div>
+  </div>
+</section>
+
+<!--addon-scripts-->
+<script src="app.js"></script>
+</body>
+</html>

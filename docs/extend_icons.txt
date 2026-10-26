@@ -1,0 +1,37 @@
+Authoring web UI icons
+======================
+
+Replace the app's Unicode glyphs with your own SVG art by dropping files into
+web/static/icons/. Naming is mechanical: <group>-<key>.svg, lower-case
+kebab-case, matching the engine's internal keys. Groups and keys:
+
+- tab-*          rail tabs: play, character, equipment, levelup, journal,
+                 spellbook, saves, info, settings, llm, lobby
+- class-*        class emblems: barbarian, bard, cleric, druid, fighter, monk,
+                 paladin, ranger, rogue, sorcerer, warlock, wizard
+- align-*        alignment sigils: lg, ng, cg, ln, tn, cn, le, ne, ce
+- school-*       spell schools: abjuration, conjuration, divination,
+                 enchantment, evocation, illusion, necromancy, transmutation
+- slot-*         equipment slots: main-hand, off-hand, armor, helm, cloak,
+                 gloves, boots, amulet, ring
+- lu-*           level-up node kinds: class, subclass, asi, expertise, spells,
+                 node
+- scene-sigil    default scene emblem (Tier A)
+- portrait-placeholder, party-figure  (Tier B, full color OK)
+- ui-*           optional play controls: trade, send, rail-toggle
+
+Tier A (default): monochrome, viewBox 0 0 24 24, every fill/stroke =
+currentColor (the app supplies the color). Either clean line work
+(stroke-width 1.75-2, round caps/joins, fill="none") or solid silhouette
+(fill="currentColor", fill-rule="evenodd" for holes) — consistent within a
+group. Keep art inside a ~20x20 live area; must read at 16 px.
+
+Tier B (the 2-3 large decorative pieces): viewBox 0 0 48 48, own palette
+allowed (flat fills or simple gradients; sits on dark #241d14-ish panels);
+may still use currentColor for theme-tinted parts. Renders 40-84 px.
+
+Universal: plain SVG 1.1, UTF-8, no <script>/<style>, no external hrefs or
+embedded rasters or fonts (text -> paths), no hard-coded width/height on the
+root <svg>, centered, one artboard per file, optimized (< ~3 KB), optional
+<title>. Files are picked up incrementally — any key you have not supplied
+yet keeps its current glyph.

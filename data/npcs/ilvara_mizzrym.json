@@ -1,0 +1,17 @@
+{
+  "name": "Ilvara Mizzrym",
+  "kind": "mortal",
+  "summary": "Drow priestess of Lolth, Velkynvelve commander (Out of the Abyss, CR 8 reference).",
+  "attributes": {"strength": 10, "dexterity": 14, "stamina": 12, "charisma": 16, "wits": 17, "intelligence": 13},
+  "abilities": {"melee": 2, "intimidation": 4, "occult": 4, "insight": 3},
+  "attack": {"name": "scourge of Lolth", "attribute": "dexterity", "skill": "melee", "damage_rating": 3},
+  "soak": 1,
+  "generation": 0,
+  "humanity": 2,
+  "morale": 90,
+  "persona": {
+    "voice": "soft, musical cruelty",
+    "wants": "a flawless report to Menzoberranzan and entertainment from suffering",
+    "fears": "Lolth's silence more than any blade"
+  }
+}

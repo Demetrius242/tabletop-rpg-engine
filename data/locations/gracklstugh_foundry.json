@@ -1,0 +1,11 @@
+{
+  "name": "Gracklstugh Foundry Quarter",
+  "summary": "Duergar gate, foundry lane, and Y's market -- Out of the Abyss mid-adventure hub.",
+  "zones": [
+    {"name": "outer gate", "adjacent": ["foundry lane"], "cover": "light", "hazard": "forge smoke"},
+    {"name": "foundry lane", "adjacent": ["outer gate", "market stall"], "cover": "light"},
+    {"name": "market stall", "adjacent": ["foundry lane"]},
+    {"name": "tunnel exit", "adjacent": ["outer gate"], "is_exit": true}
+  ],
+  "placements": {}
+}

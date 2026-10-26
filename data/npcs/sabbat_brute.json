@@ -1,0 +1,10 @@
+{
+  "name": "Sabbat Brute",
+  "kind": "vampire",
+  "summary": "A Sabbat shovelhead -- thick-skinned, fearless, and happy to swing.",
+  "attributes": {"strength": 4, "dexterity": 2, "stamina": 4, "wits": 2},
+  "abilities": {"brawl": 3, "intimidation": 2},
+  "disciplines": {"Potence": 2, "Fortitude": 2},
+  "soak": 2, "generation": 12, "humanity": 4, "intelligence": 2, "morale": 100,
+  "persona": {"voice": "spits threats between blows", "wants": "to prove itself to the pack"}
+}

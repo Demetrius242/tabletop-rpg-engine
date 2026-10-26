@@ -1,0 +1,12 @@
+{
+  "name": "Velkynvelve Slave Pens",
+  "summary": "Out of the Abyss opening site -- tiered cages, rope bridge, priestess platform, quaggoth pit.",
+  "zones": [
+    {"name": "slave pens", "adjacent": ["rope bridge", "quaggoth pit"], "cover": "light", "hazard": "drow overseers"},
+    {"name": "rope bridge", "adjacent": ["slave pens", "priestess platform"], "hazard": "bottomless chasm"},
+    {"name": "priestess platform", "adjacent": ["rope bridge"], "cover": "heavy"},
+    {"name": "quaggoth pit", "adjacent": ["slave pens"], "cover": "none", "hazard": "hungry quaggoth"},
+    {"name": "chasm exit", "adjacent": ["rope bridge"], "is_exit": true, "elevation": -1}
+  ],
+  "placements": {}
+}

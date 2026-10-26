@@ -1,0 +1,10 @@
+{
+  "name": "Archbishop Cervantes",
+  "kind": "vampire",
+  "summary": "A Lasombra elder who fights with the living dark itself.",
+  "attributes": {"strength": 3, "dexterity": 4, "stamina": 4, "manipulation": 5, "wits": 4},
+  "abilities": {"brawl": 3, "intimidation": 4, "occult": 3, "stealth": 3},
+  "disciplines": {"Obtenebration": 4, "Dominate": 3, "Potence": 3, "Fortitude": 2},
+  "soak": 4, "generation": 7, "humanity": 3, "intelligence": 4, "morale": 100,
+  "persona": {"voice": "cold, patient, certain", "wants": "to swallow the city in shadow"}
+}

@@ -1,0 +1,91 @@
+Authoring content: NPCs, locations, plots, scenes
+==================================================
+
+NPCs (data/npcs/*.json)
+-----------------------
+One JSON file per NPC. Full field list: data/npcs/README.md.
+Load with engine.content.load_npc_file(path, ruleset) -> Combatant.
+
+Minimal shape:
+{
+  "name": "Lupo", "kind": "vampire",
+  "attributes": {"strength": 4, "dexterity": 3, "stamina": 4, "wits": 3},
+  "abilities": {"brawl": 4, "intimidation": 3, "occult": 1},
+  "disciplines": {"Potence": 3, "Fortitude": 2, "Obtenebration": 2},
+  "soak": 2, "generation": 10, "humanity": 4,
+  "statuses": [],
+  "persona": {"voice": "low and amused", "wants": "to drag the coterie into the Sabbat"}
+}
+
+To make a spellcaster NPC, add a path rating plus
+"known_rituals": ["deflection_of_wooden_doom"], "inventory": ["splinter"].
+Power/ritual keys come from extend_rulesets.txt.
+
+Status vocabulary (starting `statuses`, and what powers/rites apply):
+- defensive/utility: hidden, mist, majesty, armored, warform, disguised, wakeful,
+  stake_warded, warded, true_faith, ghoul_warded
+- afflictions: terrified, entranced, dominated, entangled, paralyzed, blinded,
+  confused, silenced, poisoned, maddened, insane, haunted, cowed
+- self-buffs: claws, shadow, bonecraft, serpent_form, potent, deathsight,
+  darksight, awe, masked, beast_form
+
+
+Locations (data/locations/*.json)
+---------------------------------
+One JSON file per map: a graph of named zones, never coordinates.
+Same zone = melee reach; crossing zones = ranged (cover matters).
+One move = one step along `adjacent`. Fleeing = reaching a zone with
+"is_exit": true. Load with engine.content.load_location_file(path) -> Arena.
+
+{
+  "name": "The Rack — Neon Alley",
+  "zones": [
+    {"name": "the alley mouth", "adjacent": ["mid-alley"], "is_exit": true},
+    {"name": "mid-alley", "adjacent": ["the alley mouth", "the dead end"], "cover": "light"},
+    {"name": "the dead end", "adjacent": ["mid-alley"], "cover": "heavy", "hazard": "a dumpster fire"}
+  ],
+  "placements": {"Lupo": "the dead end"}
+}
+
+Rules of thumb:
+- keep `adjacent` symmetric; every referenced neighbor must exist; at least one exit
+- cover: none/light/heavy raises a RANGED defender's difficulty
+- elevation gives a higher attacker a small edge; hazard is narration only
+- placements is optional
+
+
+Plots and scenario seeds (data/saves/*.json)
+--------------------------------------------
+A plot is authored as state the narrator is given, not as a railroad.
+Three levers:
+1. Starting state — a save: the PC (or pre-gen), the `location`, opening
+   `history`, and `flags`. `flags` is a free-form dict for chapter,
+   objectives, clocks, reputation, who's dead.
+2. Content the scene can summon — NPCs and locations are the cast and sets.
+3. Narration context — the engine feeds location text + recent history to the
+   model each turn; setting state.location steers tone and stakes.
+
+Consequences live in flags and statuses, not prose: raise a counter, set a
+status on an NPC, flip a chapter flag at a beat. The narrator reflects state;
+it never decides it.
+
+
+Exploration scenes (rulesets/<system>/settings/<world>/scenes.py)
+------------------------------------------------------------------
+A scene is a structured site: zones + features (interactable objects:
+interactions, contents, hidden+notice, locked, gates, mutable state) +
+presences (NPCs/enemies standing in zones, each with disposition, awareness
+unaware/suspicious/alert, hidden+notice, a combatant stat block).
+Python holds all of it, so it decides what a search turns up, whether a door
+is locked, whether the guards noticed you — and when a fight starts, exactly
+which enemies are present, in which zones, on the same zone graph.
+
+Build one through the ruleset (factories take a make_enemy callable):
+  rs = DnDRuleset()
+  rs.list_scenes()                 # -> ['watchers_barrow']
+  scene = rs.build_scene("watchers_barrow")
+  engine = ExplorationEngine(client, presenter, state, rs, scene=scene)
+
+Exploration verbs (move/look, search, take/steal, open/unlock, sense) resolve
+in Python before the LLM classifier runs; everything else falls through to the
+model. Scenes are opt-in: an engine with no scene behaves as before.

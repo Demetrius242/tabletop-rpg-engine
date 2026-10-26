@@ -1,0 +1,43 @@
+Optional add-ons
+================
+
+An add-on is a folder placed NEXT to the core folder (the one holding engine/,
+rulesets/, web/) — or in any folder listed in the RPG_ADDONS_PATH environment
+variable (os.pathsep-separated):
+
+  <project>/
+  ├─ core/          the engine, rulesets, web UI, data, docs (this folder)
+  └─ <addon>/       __init__.py (defines install()), addon.json, own tests/ and README
+
+engine.addons.load_all() imports each add-on as addons.<folder> (alphabetically)
+and calls install() once. Deleting the folder removes the add-on completely —
+nothing in engine/, rulesets/, or web/ names a specific add-on.
+
+addon.json (only its presence is required):
+  {"name": ..., "title": ..., "description": ..., "requires": {...}}
+
+Inside an add-on use relative imports (from . import x). Add-on tests find the
+core folder as a sibling and put it on sys.path.
+
+Hooks an add-on can register (all consumed by generic engine/web code):
+- Ruleset extension (rules, skills, items, toggleable optional rule):
+  addons.extend_ruleset("dnd", factory)
+  consumed by DnDRuleset — see rulesets/dnd/core/extension.py for every hook
+- Narration register (extra style directive + examples):
+  engine.narration.add_register(...)
+- Items: rulesets.dnd.additional.items.register([...])
+  (an item with requires_rule only trades while that rule is on)
+- Setting content (NPCs, locations, tradesmen): add to the setting's own dicts
+- Web sheet section:  register("web.sheet_section", fn(rs, combatant) -> dict|None)
+- Web creation options: register("web.creation_options", fn(rs, options, rules))
+- Web info stats:     register("web.stats", fn(rs, stats))
+- Web event -> log row: register("web.event", fn(event, party) -> dict|None)
+- Web static assets:  register("web.static", {"name", "dir", "js": [...], "css": [...]})
+  served at /addons/<name>/... and linked into index.html
+
+A web add-on's script pushes an object onto window.RPG_ADDONS with any of:
+creationFields(host, who, options), readCreation(form, host, who, options),
+sheetSection(section) -> html.
+
+Each add-on keeps its own tests in <addon>/tests/ (self-running N/N style)
+and its own README.

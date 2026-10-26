@@ -1,0 +1,11 @@
+{
+  "name": "A Downtown Parking Garage",
+  "summary": "Three split levels of concrete and sodium light; the ramp is the way out.",
+  "zones": [
+    {"name": "lower level", "adjacent": ["ramp"], "cover": "light", "hazard": "guttering fluorescents"},
+    {"name": "ramp", "adjacent": ["lower level", "upper level"], "elevation": 1},
+    {"name": "upper level", "adjacent": ["ramp", "street exit"], "cover": "heavy"},
+    {"name": "street exit", "adjacent": ["upper level"], "is_exit": true}
+  ],
+  "placements": {}
+}

@@ -1,0 +1,92 @@
+{
+  "pc": {
+    "name": "Aisling Vane",
+    "is_pc": true,
+    "statuses": [
+      "wakeful"
+    ],
+    "sheet": {
+      "attributes": {
+        "strength": 2,
+        "dexterity": 2,
+        "stamina": 3,
+        "charisma": 2,
+        "manipulation": 3,
+        "perception": 3,
+        "intelligence": 4,
+        "wits": 3
+      },
+      "abilities": {
+        "brawl": 1,
+        "dodge": 1,
+        "melee": 0,
+        "intimidation": 1,
+        "stealth": 1,
+        "athletics": 1,
+        "subterfuge": 1,
+        "awareness": 1,
+        "occult": 3
+      },
+      "disciplines": {
+        "Auspex": 1,
+        "Dominate": 1,
+        "Path of Blood": 2
+      },
+      "attack": {
+        "name": "fangs and fists",
+        "attribute": "dexterity",
+        "skill": "brawl",
+        "damage_rating": 2
+      },
+      "soak": 3,
+      "health_taken": 0,
+      "health_max": 7,
+      "initiative_bonus": 0,
+      "generation": 13,
+      "blood": 10,
+      "blood_max": 10,
+      "blood_per_turn": 1,
+      "humanity": 7,
+      "virtues": {
+        "conscience": 3,
+        "self_control": 3,
+        "courage": 3
+      },
+      "willpower": 5,
+      "willpower_max": 5,
+      "derangements": [],
+      "intelligence": 3,
+      "morale": 100,
+      "morale_threshold": 30,
+      "resolve_target": 6,
+      "comprehends_language": true,
+      "mindless": false,
+      "clan": "Tremere",
+      "inventory": [
+        "splinter",
+        "vial_of_blood",
+        "salt"
+      ],
+      "known_rituals": [
+        "deflection_of_wooden_doom",
+        "ward_versus_ghouls"
+      ],
+      "scene_effects": []
+    }
+  },
+  "location": "A Tremere Chantry Cell",
+  "mode": "exploration",
+  "history": [
+    {
+      "role": "narrator",
+      "text": "The candle-flames lean toward the door as you finish the night's ledger."
+    },
+    {
+      "role": "player",
+      "text": "I check the wards on the threshold."
+    }
+  ],
+  "flags": {
+    "chapter": "Prologue: The Ledger"
+  }
+}

@@ -1,0 +1,106 @@
+Authoring and extending rulesets
+================================
+
+A new game system (rulesets/<system>/)
+--------------------------------------
+Folder layout (mirror the shipped ones):
+  rulesets/<system>/
+    __init__.py      re-export your Ruleset class
+    version.py       NAME, VERSION, STATUS, SUMMARY, DECLARES{...}
+    readiness.py     runs engine.readiness.probe against your class
+    core/            the Ruleset subclass + turn model
+    additional/      layered rules (extra subsystems, content)
+    tests/           ruleset-specific tests (+ a readiness assert)
+
+Subclass engine.ruleset.Ruleset. Required (the readiness probe checks them):
+  skill_names() -> list[str], modifier_for(actor, skill) -> int
+  difficulty_for_band(band) -> Difficulty   # map the engine's six bands
+  resolve_check(actor, skill, difficulty, ctx=None) -> Outcome
+      # roll and return the universal Outcome(success, band, ...);
+      # band carries degree (crit/marginal/botch)
+  health_descriptor(actor) -> str, health_fraction(actor) -> float,
+  is_defeated(actor) -> bool
+  turn_model() -> TurnModel                 # attack/defense resolution
+  make_pc(name) -> Combatant
+
+Optional hooks (defaults are inert; override to light up features):
+  creation_spec()/build_pc() (the creation wizard), make_enemy(...),
+  actions_this_turn, pre_turn_choices/apply_pre_turn, forced_action,
+  morality(), available_combat_powers/use_discipline/ai_combat_power,
+  try_special_action/exploration_powers/known_rituals.
+
+version.py:
+  NAME="My System"; VERSION="0.1.0"; STATUS="alpha"
+  SUMMARY="..."; DECLARES={"creation": True, "combat": True, "morality": False,
+                           "invocation": False, "rituals": False}
+
+Then: python rulesets/<system>/readiness.py   # READY iff required checks pass
+A ruleset that only stubs the required methods already prints READY.
+Register it for play by importing it in run.py.
+
+
+Extending the Storyteller ruleset (the additional/ layer)
+---------------------------------------------------------
+Two mechanics, both plain data run by one resolver — no engine changes.
+
+Powers (rulesets/storyteller/additional/disciplines.py) — one Power row in
+_POWERS; a single resolver runs them all (rating gate, blood cost, delivery
+gate, optional roll, Generation wall, then the effect):
+
+  Power("Obtenebration", 3, "arms_of_the_abyss", "Arms of the Abyss",
+        "Raise tentacles of living shadow to seize.",
+        gate="line_of_sight", target="other",
+        roll=("manipulation", "occult"), combat=True, effect="entangle")
+
+Fields: discipline (label = rating key), dots (1-5), key (machine name used in
+`use <key>`), name, summary, cost (blood), gate
+(self/line_of_sight/eye_contact/verbal/none), target (self/other),
+roll=(attribute, ability) (omit for an auto self-buff), contested (resisted by
+target Willpower), combat (offer as a combat action), effect (dispatch key),
+damage (bonus health levels for damaging powers, added to net successes).
+
+Effect keys:
+- self-buff tokens: claws, mist, armor, shadow, bonecraft, warform,
+  serpent_form, heartless, disguise, potent, deathsight, darksight, mask, awe,
+  majesty, beast_form, hide
+- target debuffs: entangle, blind, silence, paralyze, confuse, poison,
+  terrify, entrance, command, madden, insane, quell, draw_out_beast
+- damage: damage, fire, blood_drain, telekinesis (call rs.apply_damage;
+  blood_drain also feeds the caster); scales with net successes + `damage`
+- "" or mesmerize/forget/condition/possession/summon -> narrative:
+  resolves success/fail and the narrator paints it from the cue
+
+New effect: add a branch in _apply_effect that sets a status + a result.cue;
+teach the turn model (core/storyteller_combat.py) to read the token, and/or
+forced_action in core/storyteller.py.
+
+New path (e.g. a Thaumaturgy path): append five Power rows with
+discipline="<Path label>", roll=("intelligence","occult"); register the label
+in DISCIPLINES and in CLAN_DISCIPLINES of the clan that gets it. Ratings live
+in sheet["disciplines"]["<Path label>"].
+
+Rituals (rulesets/storyteller/additional/rituals.py) — learned
+(sheet["known_rituals"]) and performed with materials (sheet["inventory"],
+consumed). One Ritual row:
+
+  Ritual("Thaumaturgy", 2, "ward_versus_ghouls", "Ward versus Ghouls",
+         "Sear a sigil that ghouls cannot cross.",
+         ingredients=("vial_of_blood", "salt"), scope="target",
+         token="ghoul_warded", target_kind="ghoul",
+         yes_cue="the sigil flares; {t} the ghoul recoils and cannot approach it.")
+
+Fields: tradition (Thaumaturgy/Necromancy), level (1-5; difficulty = level+3),
+key, name, summary, ingredients (consumed by casting), scope
+(self/target/area), token (status applied on success; "" = narrative),
+target_kind (restrict the target), yes_cue/no_cue ({a}=caster, {t}=target).
+
+perform_ritual(rs, actor, key, target) runs: known? -> ingredients present?
+-> consume -> Occult roll (Int+Occult vs level+3) -> protection check (warded/
+true_faith/sanctified/blessed/consecrated target, or wrong target_kind, turns
+it aside even on a clean cast) -> apply the token.
+
+Invocation is deterministic and player-driven (never the model): `use <power>`
+in combat or exploration, `perform <ritual>` in exploration. The matcher is
+engine/invoke.py; the exploration hook is try_special_action in
+core/storyteller.py. After adding content, extend
+rulesets/storyteller/tests/ and re-run readiness.

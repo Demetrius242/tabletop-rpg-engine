@@ -1,0 +1,5 @@
+vtm-rpg-engine 0.13.0
+engine            0.13.0
+web interface     0.3.0  (preview; D&D wired)
+ruleset: dnd          1.11.0  (stable)
+ruleset: storyteller  1.0.0  (stable)

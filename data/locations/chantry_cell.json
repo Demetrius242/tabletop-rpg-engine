@@ -1,0 +1,10 @@
+{
+  "name": "A Tremere Chantry Cell",
+  "summary": "A warded stone room of candles, ledgers, and reagent jars.",
+  "zones": [
+    {"name": "the cell", "adjacent": ["the stair"], "cover": "light", "hazard": "open flame"},
+    {"name": "the stair", "adjacent": ["the cell", "the landing"], "elevation": 1},
+    {"name": "the landing", "adjacent": ["the stair"], "is_exit": true}
+  ],
+  "placements": {}
+}

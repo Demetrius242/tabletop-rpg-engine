@@ -1,0 +1,22 @@
+NAME    = "Dungeons & Dragons (5e-flavored)"
+VERSION = "1.11.0"
+EDITION = "d20 core"
+STATUS  = "stable"
+AUTHORS = ["engine team"]
+SUMMARY = ("A d20 ruleset: ability checks, AC, HP, and a utility-AI combat model, plus the "
+           "additional rules -- nine races, all twelve classes, backgrounds with narrative "
+           "data, the nine alignments (with 5e mechanical effects), skill/save proficiencies, "
+           "1-to-20 leveling for every class, and the per-class spell lists. The narrator "
+           "is briefed with each character's chosen trait/ideal/bond/flaw, alignment, and the "
+           "active world. Adds choosing prepared/known spells; spell-slot and class-resource "
+           "expenditure with short/long-rest refresh; an item catalogue (category, rarity, "
+           "value, attunement, bonuses, lore, cursed/alive/plot details, regions); 5e trade "
+           "with thirteen Forgotten Realms tradesmen and randomly-generated, restocking shop "
+           "stock (plot items never traded); and a city long-rest rule (rent a room or face "
+           "the Watch). Supports the engine's exploration scene runner -- structured sites of "
+           "zones, interactable features, and placed NPCs/latent enemies that Python adjudicates "
+           "(search, loot, lockpicking, stealing, divination reveal) and that hand off seamlessly "
+           "into combat with the enemies already positioned; ships an authored Forgotten Realms "
+           "dungeon, the Watcher's Barrow. Optional add-ons plug in as RulesExtensions "
+           "(rulesets/dnd/core/extension.py), toggled as optional rules.")
+DECLARES = {"creation": True, "combat": True, "morality": False, "invocation": False, "rituals": False}
