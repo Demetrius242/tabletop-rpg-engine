@@ -115,16 +115,3 @@ python rulesets/storyteller/readiness.py
 | Content | NPCs, locations, plots and scenes are defined in JSON files. No source code changes are required. |
 | Rulesets | A new game system is implemented as a subclass of `Ruleset` (`tabletop-rpg-engine/engine/ruleset.py`). |
 | Add-ons | A self-contained directory placed alongside `tabletop-rpg-engine/`, containing an `addon.json` manifest and an `install()` function. Add-ons integrate exclusively through generic hooks; the core contains no references to specific add-ons. Deleting the directory removes the add-on completely. |
-
-## Documentation
-
-| Document | Subject |
-|----------|---------|
-| [tabletop-rpg-engine/README.md](tabletop-rpg-engine/README.md) | Complete manual: user guide, command reference, architecture |
-| [tabletop-rpg-engine/docs/How-to-Play.pdf](tabletop-rpg-engine/docs/How-to-Play.pdf) | Player guide |
-| [tabletop-rpg-engine/docs/web_interface.md](tabletop-rpg-engine/docs/web_interface.md) | Web interface |
-| [tabletop-rpg-engine/docs/design_notes.md](tabletop-rpg-engine/docs/design_notes.md) | Architectural rationale |
-| [tabletop-rpg-engine/docs/authoring_rulesets.md](tabletop-rpg-engine/docs/authoring_rulesets.md) | Implementing a new ruleset |
-| [tabletop-rpg-engine/docs/extending_rulesets.md](tabletop-rpg-engine/docs/extending_rulesets.md) | Extending an existing ruleset |
-| [tabletop-rpg-engine/docs/addons.md](tabletop-rpg-engine/docs/addons.md) | Add-on specification |
-| [tabletop-rpg-engine/docs/authoring_npcs.md](tabletop-rpg-engine/docs/authoring_npcs.md), [authoring_locations.md](tabletop-rpg-engine/docs/authoring_locations.md), [authoring_plots.md](tabletop-rpg-engine/docs/authoring_plots.md), [scene_runner.md](tabletop-rpg-engine/docs/scene_runner.md) | Content authoring |
